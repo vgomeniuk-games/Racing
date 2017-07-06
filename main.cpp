@@ -15,6 +15,10 @@ int main() {
     background.setTexture(t_back);
     car.setTexture(t_car);
 
+    // TODO Map-related variables
+    int background_w = background.getTextureRect().width;
+    int background_h = background.getTextureRect().height;
+
     // Car setup (pivot point and color)
     car.setOrigin(22, 22);
     car.setColor(sf::Color::Green);
@@ -57,8 +61,8 @@ int main() {
         // Update car's position and rotation as well as background offset to display map correctly
         x += sin(angle) * speed;
         y -= cos(angle) * speed;
-        x > 320 ? (offset.x = x - 320) : 0;
-        y > 240 ? (offset.y = y - 240) : 0;
+        x > 320 && background_w - x > 320 ? (offset.x = x - 320) : 0;
+        y > 240 && background_h - y > 240 ? (offset.y = y - 240) : 0;
         background.setPosition(-offset.x, -offset.y);
         car.setPosition(x - offset.x, y - offset.y);
         car.setRotation(angle * 180 / static_cast<float>(M_PI));
