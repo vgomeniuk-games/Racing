@@ -3,7 +3,7 @@ project(Racing)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-set(SOURCE_FILES main.cpp input.cpp input.h)
+set(SOURCE_FILES main.cpp input.cpp input.h car.cpp car.h)
 add_executable(Racing ${SOURCE_FILES})
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake_modules")
