@@ -1,4 +1,6 @@
+#include <math.h>
 #include <SFML/Graphics.hpp>
+#include "input.h"
 
 int main() {
     // Create a window
@@ -13,6 +15,17 @@ int main() {
     background.setTexture(t_back);
     car.setTexture(t_car);
 
+    // Car setup (pivot point and color)
+    car.setOrigin(22, 22);
+    car.setColor(sf::Color::Green);
+
+    // TODO Car-related variables
+    float x = 300, y=300;
+    float speed = 0, angle = 0;
+    float maxSpeed = 12.0;
+    float accelaration = 0.2, decelleration = 0.3;
+    float turnSpeed = 0.08;
+
     // Main loop
     while (window.isOpen()) {
         sf::Event e;
@@ -21,15 +34,32 @@ int main() {
                 window.close();
             }
         }
-        // Draw background
+        // Handle keyboard input
+        Input::handle({ sf::Keyboard::Up }, [&](){
+            if (speed > maxSpeed) return;  // TODO limit car's speed
+            speed < 0 ? speed += decelleration : speed += accelaration;
+        });
+        Input::handle({ sf::Keyboard::Down }, [&](){
+            if (speed < -maxSpeed) return;  // TODO limit car's speed
+            speed > 0 ? speed -= decelleration : speed -= accelaration;
+        });
+        Input::handle({ sf::Keyboard::Up, sf::Keyboard::Down }, [&](){
+            // TODO Don't move if both Up & Down pressed
+            speed - decelleration ? speed -= decelleration : (speed + decelleration < 0 ? speed += decelleration : 0);
+        });
+        Input::handle({ sf::Keyboard::Left }, [&](){ if(speed != 0) { angle -= turnSpeed * speed / maxSpeed; } });
+        Input::handle({ sf::Keyboard::Right }, [&](){ if(speed != 0) { angle += turnSpeed * speed / maxSpeed; } });
+
+        // Move
+        x += sin(angle) * speed;
+        y -= cos(angle) * speed;
+        car.setPosition(x, y);
+        car.setRotation(angle * 180 / static_cast<float>(M_PI));
+
+        // Draw
         window.clear(sf::Color::White);
         window.draw(background);
-
-        // Draw a car
-        car.setPosition(300, 300);
-        car.setColor(sf::Color::Green);
         window.draw(car);
-
         window.display();
     }
     return 0;
