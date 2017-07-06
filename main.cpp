@@ -18,6 +18,7 @@ int main() {
     // Car setup (pivot point and color)
     car.setOrigin(22, 22);
     car.setColor(sf::Color::Green);
+    car.setPosition(320, 240);
 
     // TODO Car-related variables
     float x = 300, y=300;
@@ -25,6 +26,9 @@ int main() {
     float maxSpeed = 12.0;
     float accelaration = 0.2, decelleration = 0.3;
     float turnSpeed = 0.08;
+
+    // Screen offset
+    struct { int x{ 0 }; int y{ 0 }; } offset;
 
     // Main loop
     while (window.isOpen()) {
@@ -50,10 +54,13 @@ int main() {
         Input::handle({ sf::Keyboard::Left }, [&](){ if(speed != 0) { angle -= turnSpeed * speed / maxSpeed; } });
         Input::handle({ sf::Keyboard::Right }, [&](){ if(speed != 0) { angle += turnSpeed * speed / maxSpeed; } });
 
-        // Move
+        // Update car's position and rotation as well as background offset to display map correctly
         x += sin(angle) * speed;
         y -= cos(angle) * speed;
-        car.setPosition(x, y);
+        x > 320 ? (offset.x = x - 320) : 0;
+        y > 240 ? (offset.y = y - 240) : 0;
+        background.setPosition(-offset.x, -offset.y);
+        car.setPosition(x - offset.x, y - offset.y);
         car.setRotation(angle * 180 / static_cast<float>(M_PI));
 
         // Draw
