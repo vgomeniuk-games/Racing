@@ -38,7 +38,7 @@ int main() {
     while (window.isOpen()) {
         sf::Event e;
         while (window.pollEvent((e))) {
-            if (e.type == sf::Event::Closed) {
+            if (e.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
                 window.close();
             }
         }
