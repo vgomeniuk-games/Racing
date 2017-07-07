@@ -7,7 +7,14 @@ AI::AI(int competitors) {
 }
 
 void AI::update() {
+    for (const auto& car : cars) {
+        // TODO Replace with ai algorithm
+        car->move(Direction::Up);
+        car->move(Direction::Right);
 
+        // Call update function with (0, 0) offset
+        car->update([](sf::Vector2f) -> sf::Vector2f { return sf::Vector2f(0, 0); });
+    }
 }
 
 void AI::draw(sf::RenderWindow& window) {
