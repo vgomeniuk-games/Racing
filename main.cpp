@@ -1,6 +1,4 @@
-#include <math.h>
 #include <functional>
-#include <vector>
 #include <SFML/Graphics.hpp>
 #include "input.h"
 #include "car.h"
@@ -15,6 +13,13 @@ int main() {
     Map map;
     Car car(320, 240, sf::Color::Green);
 
+    // Bind input with proper callbacks
+    Input::bind({ sf::Keyboard::Up }, [&car](){car.move(Direction::Up);});
+    Input::bind({ sf::Keyboard::Down }, [&car](){car.move(Direction::Down);});
+    Input::bind({ sf::Keyboard::Up, sf::Keyboard::Down }, [&car](){car.move(Direction::None);});
+    Input::bind({ sf::Keyboard::Left }, [&car](){car.move(Direction::Left);});
+    Input::bind({ sf::Keyboard::Right },[&car](){car.move(Direction::Right);});
+
     // Main loop
     while (window.isOpen()) {
         sf::Event e;
@@ -23,14 +28,8 @@ int main() {
                 window.close();
             }
         }
-        // Handle keyboard input
-        Input::handle({ sf::Keyboard::Up }, [&car](){car.move(Direction::Up);});
-        Input::handle({ sf::Keyboard::Down }, [&car](){car.move(Direction::Down);});
-        Input::handle({ sf::Keyboard::Up, sf::Keyboard::Down }, [&car](){car.move(Direction::None);});
-        Input::handle({ sf::Keyboard::Left }, [&car](){car.move(Direction::Left);});
-        Input::handle({ sf::Keyboard::Right },[&car](){car.move(Direction::Right);});
-
         // Update
+        Input::update();
         car.update([&map](sf::Vector2f position){return map.calculateOffset(position);});
         map.update();
 
