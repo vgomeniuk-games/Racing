@@ -19,6 +19,7 @@ private:
     struct {
         float acc{ 0.2f };
         float turn{ 0.08f };
+        bool moving{ false };
     } Transform;
 };
 

@@ -14,6 +14,8 @@ Car::Car(float x, float y, sf::Color color) {
 }
 
 void Car::move(Direction direction) {
+    // If method is called - objet is probably moving
+    Transform.moving = true;
     switch (direction) {
         case Up:
             if (Speed.current > Speed.max) { break; };
@@ -34,8 +36,8 @@ void Car::move(Direction direction) {
             };
             break;
         default:
-            // Decelerate over time
-            Speed.current > 0 ? Speed.current -= Transform.acc : Speed.current += Transform.acc;
+            // Register bindings to None as signal to stop moving
+            Transform.moving = false;
             break;
     }
 }
@@ -50,4 +52,14 @@ void Car::update() {
     Position.y -= cos(Rotation.angle) * Speed.current;
     View.sp.setPosition(Position.x, Position.y);
     View.sp.setRotation(Rotation.angle * 180 / static_cast<float>(M_PI));
+
+    // Decelerate over time if no movement registered
+    if (!Transform.moving) {
+        if (Speed.current > Transform.acc) { Speed.current -= Transform.acc; }
+        else if (Speed.current < -Transform.acc) { Speed.current += Transform.acc; }
+        else { Speed.current = 0; }
+    }
+
+    // Reset movement observer at the end of a frame update
+    Transform.moving = false;
 }
