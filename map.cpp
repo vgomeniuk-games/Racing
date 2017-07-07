@@ -10,7 +10,7 @@ void Map::draw(sf::RenderWindow &window) {
     window.draw(View.sp);
 }
 
-sf::Vector2f Map::offset(sf::Vector2f pivot){
+sf::Vector2f Map::calculateOffset(sf::Vector2f pivot){
     // Get background texture size
     sf::Vector2u size = View.t.getSize();
 

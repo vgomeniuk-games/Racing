@@ -7,7 +7,7 @@ class Map {
 public:
     Map();
     void draw(sf::RenderWindow& window);
-    sf::Vector2f offset(sf::Vector2f pivot);
+    sf::Vector2f calculateOffset(sf::Vector2f pivot);
     void update();
 private:
     struct { sf::Sprite sp; sf::Texture t;  } View;
