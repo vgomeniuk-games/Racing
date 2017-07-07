@@ -1,4 +1,5 @@
 #include "map.h"
+#include "globals.h"
 
 Map::Map() {
     // Load & setup sprite
@@ -15,13 +16,15 @@ sf::Vector2f Map::calculateOffset(sf::Vector2f pivot){
     sf::Vector2u size = View.t.getSize();
 
     // Width offset
-    if (pivot.x > 320 && size.x - pivot.x > 320) {
-        Offset.x = pivot.x - 320;
+    float wo = Globals::Width / 2;
+    if (pivot.x > wo && size.x - pivot.x > wo) {
+        Offset.x = pivot.x - wo;
     }
 
     // Height offset
-    if (pivot.y > 240 && size.y - pivot.y > 240) {
-        Offset.y = pivot.y - 240;
+    float ho = Globals::Height / 2;
+    if (pivot.y > wo && size.y - pivot.y > wo) {
+        Offset.y = pivot.y - wo;
     }
     return Offset;
 }

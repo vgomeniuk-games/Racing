@@ -4,15 +4,16 @@
 #include "car.h"
 #include "map.h"
 #include "ai.h"
+#include "globals.h"
 
 int main() {
     // Create a window
-    sf::RenderWindow window(sf::VideoMode(640, 480), "Racing");
+    sf::RenderWindow window(sf::VideoMode(Globals::Width, Globals::Height), "Racing");
     window.setFramerateLimit(60);
 
     // Setup actors
     Map map;
-    Car car(320, 240, sf::Color::Green);
+    Car car(Globals::Width / 2, Globals::Height / 2, sf::Color::Green);
     AI competitors(5);
 
     // Bind input with proper callbacks
