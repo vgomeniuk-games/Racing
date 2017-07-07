@@ -2,16 +2,16 @@
 #include "car.h"
 
 Car::Car(float x, float y, sf::Color color) {
+    // Set start position
+    Position.Absolute.x = x;
+    Position.Absolute.y = y;
+
     // Load & setup sprite
     View.t.loadFromFile("assets/car.png");
     View.sp.setTexture(View.t);
     View.sp.setOrigin(22, 22);
     View.sp.setColor(color);
-    View.sp.setPosition(x, y);
-
-    // Set start position
-    Position.x = x;
-    Position.y = y;
+    View.sp.setPosition(Position.Absolute.x, Position.Absolute.y);
 }
 
 void Car::move(Direction direction) {
@@ -47,11 +47,16 @@ void Car::draw(sf::RenderWindow &window) {
     window.draw(View.sp);
 }
 
-void Car::update() {
-    // Change position and rotation of the View
-    Position.x += sin(Rotation.angle) * Speed.current;
-    Position.y -= cos(Rotation.angle) * Speed.current;
-    View.sp.setPosition(Position.x, Position.y);
+void Car::update(std::function<sf::Vector2f(sf::Vector2f)> calculateOffset) {
+    // Calculate correct position
+    Position.Absolute.x += sin(Rotation.angle) * Speed.current;
+    Position.Absolute.y -= cos(Rotation.angle) * Speed.current;
+    auto Offset = calculateOffset(Position.Absolute);
+    Position.Relative.x = Position.Absolute.x - Offset.x;
+    Position.Relative.y = Position.Absolute.y - Offset.y;
+
+    // Update position and rotation
+    View.sp.setPosition(Position.Relative);
     View.sp.setRotation(Rotation.angle * 180 / static_cast<float>(M_PI));
 
     // Decelerate over time if no movement registered
@@ -64,7 +69,3 @@ void Car::update() {
     // Reset movement observer at the end of a frame update
     Transform.moving = false;
 }
-
-std::pair<float, float> Car::getPosition() {
-    return std::make_pair(Position.x, Position.y);
-};
