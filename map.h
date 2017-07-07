@@ -7,9 +7,11 @@ class Map {
 public:
     Map();
     void draw(sf::RenderWindow& window);
+    sf::Vector2f offset(sf::Vector2f pivot);
+    void update();
 private:
-    struct { sf::Sprite sp; sf::Texture t; } View;
-    struct { int x{ 0 }; int y{ 0 }; } Offset;
+    struct { sf::Sprite sp; sf::Texture t;  } View;
+    sf::Vector2f Offset;
 };
 
 
