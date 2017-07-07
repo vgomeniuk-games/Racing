@@ -1,10 +1,9 @@
 #include <functional>
-#include <vector>
-#include <memory>
 #include <SFML/Graphics.hpp>
 #include "input.h"
 #include "car.h"
 #include "map.h"
+#include "ai.h"
 
 int main() {
     // Create a window
@@ -14,13 +13,7 @@ int main() {
     // Setup actors
     Map map;
     Car car(320, 240, sf::Color::Green);
-
-    // Setup competitors
-    std::vector<sf::Color> colors = {sf::Color::Red, sf::Color::Green, sf::Color::Black, sf::Color::White, sf::Color::Yellow};
-    std::vector<std::unique_ptr<Car>> competitors;
-    for(int i = 0; i < 5; ++i) {
-        competitors.push_back(std::unique_ptr<Car>(new Car(320 + i * 50, 240 + i * 50, colors[i])));
-    }
+    AI competitors(5);
 
     // Bind input with proper callbacks
     Input::bind({ sf::Keyboard::Up }, [&car](){car.move(Direction::Up);});
@@ -41,14 +34,13 @@ int main() {
         Input::update();
         car.update([&map](sf::Vector2f position){return map.calculateOffset(position);});
         map.update();
+        competitors.update();
 
         // Draw
         window.clear(sf::Color::White);
         map.draw(window);
         car.draw(window);
-        for (const auto& car : competitors) {
-            car->draw(window);
-        }
+        competitors.draw(window);
         window.display();
     }
     return 0;
