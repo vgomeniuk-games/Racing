@@ -4,21 +4,18 @@
 #include <SFML/Graphics.hpp>
 #include "input.h"
 #include "car.h"
+#include "map.h"
 
 int main() {
     // Create a window
     sf::RenderWindow window(sf::VideoMode(640, 480), "Racing");
     window.setFramerateLimit(60);
 
-    // Load sprites
-    sf::Sprite background;
-    sf::Texture t_back;
-    t_back.loadFromFile("assets/background.png");
-    background.setTexture(t_back);
+//    // TODO Map-related variables
+//    int background_w = background.getTextureRect().width;
+//    int background_h = background.getTextureRect().height;
 
-    // TODO Map-related variables
-    int background_w = background.getTextureRect().width;
-    int background_h = background.getTextureRect().height;
+    Map map;
 
     // TODO Car-related variables
     float x = 300, y=300;
@@ -55,7 +52,7 @@ int main() {
 
         // Draw loop
         window.clear(sf::Color::White);
-        window.draw(background);
+        map.draw(window);
         car.draw(window);
         window.display();
     }
