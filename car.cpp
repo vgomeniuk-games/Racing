@@ -7,8 +7,9 @@ Car::Car(float x, float y, sf::Color color) {
     View.sp.setTexture(View.t);
     View.sp.setOrigin(22, 22);
     View.sp.setColor(color);
-    View.sp.setPosition(320, 240);  // TODO
+    View.sp.setPosition(x, y);
 
+    // Set start position
     Position.x = x;
     Position.y = y;
 }
