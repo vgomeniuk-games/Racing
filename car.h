@@ -11,6 +11,7 @@ public:
     void move(Direction direction);
     void draw(sf::RenderWindow& window);
     void update();
+    std::pair<float, float> getPosition();
 private:
     struct { sf::Sprite sp; sf::Texture t; } View;
     struct { float x; float y; } Position;

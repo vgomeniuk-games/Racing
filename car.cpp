@@ -64,3 +64,7 @@ void Car::update() {
     // Reset movement observer at the end of a frame update
     Transform.moving = false;
 }
+
+std::pair<float, float> Car::getPosition() {
+    return std::make_pair(Position.x, Position.y);
+};
