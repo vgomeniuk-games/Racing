@@ -1,8 +1,13 @@
 #include "ai.h"
+#include "globals.h"
 
 AI::AI(int competitors) {
     for(int i = 0; i < competitors; ++i) {
-        cars.push_back(std::unique_ptr<Car>(new Car(320 + i * 50, 240 + i * 50, colors[i % colors.size()])));
+        cars.push_back(std::unique_ptr<Car>(new Car(
+                Globals::Width / 2 + (i + 1) * 50,
+                Globals::Height / 2 + (i + 1) * 50,
+                colors[i % colors.size()]
+        )));
     }
 }
 
@@ -13,7 +18,7 @@ void AI::update() {
         car->move(Direction::Right);
 
         // Call update function with (0, 0) offset
-        car->update([](sf::Vector2f) -> sf::Vector2f { return sf::Vector2f(0, 0); });
+        car->update([](sf::Vector2f) -> sf::Vector2f { return sf::Vector2f(); });
     }
 }
 
