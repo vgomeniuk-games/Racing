@@ -10,7 +10,7 @@
 class AI {
 public:
     AI(int competitors);
-    void update();
+    void update(sf::Vector2f Offset);
     void draw(sf::RenderWindow& window);
 
 private:
