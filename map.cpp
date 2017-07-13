@@ -7,7 +7,7 @@ Map::Map() {
     View.sp.setTexture(View.t);
 }
 
-void Map::draw(sf::RenderWindow &window) {
+void Map::draw(sf::RenderWindow &window) const {
     window.draw(View.sp);
 }
 
@@ -26,6 +26,10 @@ sf::Vector2f Map::calculateOffset(sf::Vector2f pivot){
     if (pivot.y > wo && size.y - pivot.y > wo) {
         View.Offset.y = pivot.y - wo;
     }
+    return View.Offset;
+}
+
+sf::Vector2f Map::getOffset() const {
     return View.Offset;
 }
 

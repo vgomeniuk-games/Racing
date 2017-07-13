@@ -6,9 +6,11 @@
 class Map {
 public:
     Map();
-    void draw(sf::RenderWindow& window);
+    void draw(sf::RenderWindow& window) const;
     sf::Vector2f calculateOffset(sf::Vector2f pivot);
+    sf::Vector2f getOffset() const;
     void update();
+
 private:
     struct {
         sf::Sprite sp;
