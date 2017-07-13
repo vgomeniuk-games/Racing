@@ -14,7 +14,7 @@ int main() {
     // Setup actors
     Map map;
     Car car(Globals::Width / 2, Globals::Height / 2, sf::Color::Green);
-    AI competitors(5);
+    AI competitors(1);
 
     // Bind input with proper callbacks
     Input::bind({ sf::Keyboard::Up }, [&car](){car.move(Direction::Up);});
@@ -33,9 +33,11 @@ int main() {
         }
         // Update
         Input::update();
-        car.update([&map](sf::Vector2f position){return map.calculateOffset(position);});
+        map.calculateOffset(car.getPosition());
         map.update();
-        competitors.update();
+        car.update(map.getOffset());
+        competitors.update(map.getOffset());
+        Car::checkCollision();
 
         // Draw
         window.clear(sf::Color::White);
