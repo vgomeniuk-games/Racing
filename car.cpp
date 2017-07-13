@@ -1,5 +1,6 @@
 #include <math.h>
 #include "car.h"
+#include "utils.h"
 
 // Initialize static values
 std::vector<Car*> Car::cars;
@@ -47,6 +48,18 @@ void Car::move(Direction direction) {
             // Register bindings to None as signal to stop moving
             Transform.moving = false;
             break;
+    }
+}
+
+void Car::move(sf::Vector2f point) {
+    // Calculate angle to a point
+    float targetAngle = atan2f(point.x - Position.Absolute.x, Position.Absolute.y - point.y);
+    float delta = Rotation.angle - targetAngle;
+    Rotation.angle += (sin(delta) < 0 ? 0.08 : -0.08);
+
+    // Increase speed
+    if (Speed.current < Speed.max) {
+        Speed.current += Transform.acc * 2;
     }
 }
 
@@ -101,7 +114,8 @@ void Car::checkCollision(Car* other) {
 
     // Check if collide
     // Note: Compare pow(vector.length) and don't calculate sqrt()
-    if(pow(distance.x, 2) + pow(distance.y, 2) < 2 * pow(Car::Info.size, 2)) {
+
+    if(Utils::length(distance) < sqrtf(2.0f) * Car::Info.size) {
         // Slide a bit to different direction
         this->Position.Absolute += distance / 5.0f;
         other->Position.Absolute -= distance / 5.0f;

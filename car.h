@@ -13,6 +13,7 @@ class Car {
 public:
     Car(float x, float y, sf::Color color);
     void move(Direction direction);
+    void move(sf::Vector2f point);
     sf::Vector2f getPosition(PositionType type=Absolute);
 
     static void draw(sf::RenderWindow& window);
