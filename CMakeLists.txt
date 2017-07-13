@@ -3,7 +3,7 @@ project(Racing)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-set(SOURCE_FILES main.cpp input.cpp input.h car.cpp car.h map.cpp map.h ai_controller.cpp ai_controller.h globals.h)
+set(SOURCE_FILES main.cpp input.cpp input.h car.cpp car.h map.cpp map.h ai_controller.cpp ai_controller.h globals.h utils.h)
 add_executable(Racing ${SOURCE_FILES})
 add_custom_command(TARGET Racing PRE_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
