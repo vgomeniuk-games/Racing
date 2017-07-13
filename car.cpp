@@ -1,17 +1,24 @@
 #include <math.h>
 #include "car.h"
 
+// Initialize static values
+std::vector<Car*> Car::cars;
+Car::InfoType Car::Info;
+
 Car::Car(float x, float y, sf::Color color) {
     // Set start position
     Position.Absolute.x = x;
     Position.Absolute.y = y;
 
     // Load & setup sprite
-    View.t.loadFromFile("assets/car.png");
+    View.t.loadFromFile(Car::Info.asset);
     View.sp.setTexture(View.t);
-    View.sp.setOrigin(22, 22);
+    View.sp.setOrigin(Car::Info.size, Car::Info.size);
     View.sp.setColor(color);
     View.sp.setPosition(Position.Absolute.x, Position.Absolute.y);
+
+    // Register instance
+    Car::cars.push_back(this);
 }
 
 void Car::move(Direction direction) {
@@ -47,11 +54,13 @@ void Car::draw(sf::RenderWindow &window) {
     window.draw(View.sp);
 }
 
-void Car::update(std::function<sf::Vector2f(sf::Vector2f)> calculateOffset) {
-    // Calculate correct position
+sf::Vector2f Car::getPosition(PositionType type) {
+    return (type == Absolute ? Position.Absolute : Position.Relative);
+}
+
+void Car::update(sf::Vector2f Offset) {
     Position.Absolute.x += sin(Rotation.angle) * Speed.current;
     Position.Absolute.y -= cos(Rotation.angle) * Speed.current;
-    auto Offset = calculateOffset(Position.Absolute);
     Position.Relative.x = Position.Absolute.x - Offset.x;
     Position.Relative.y = Position.Absolute.y - Offset.y;
 
@@ -68,4 +77,24 @@ void Car::update(std::function<sf::Vector2f(sf::Vector2f)> calculateOffset) {
 
     // Reset movement observer at the end of a frame update
     Transform.moving = false;
+
+}
+
+void Car::checkCollision() {
+    for (int a = 0; a < cars.size(); ++a) {
+        for (int b = a + 1; b < cars.size(); ++b) {
+
+            sf::Vector2f posA = cars[a]->Position.Absolute;
+            sf::Vector2f posB = cars[b]->Position.Absolute;
+            sf::Vector2f dpos = posA - posB;
+
+            // If 2 cars collide
+            // Note: Compare pow(vector.length) and don't calculate sqrt()
+            if(pow(dpos.x, 2) + pow(dpos.y, 2) < 2 * pow(Car::Info.size, 2)) {
+                cars[a]->Position.Absolute += dpos / 5.0f;
+                cars[b]->Position.Absolute -= dpos / 5.0f;
+            }
+
+        }
+    }
 }
