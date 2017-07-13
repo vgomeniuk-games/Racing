@@ -5,8 +5,8 @@
 #include <SFML/System/Vector2.hpp>
 
 namespace Utils {
-    float length(sf::Vector2f v) {
-        return sqrtf(pow(v.x, 2) + pow(v.y, 2));
+    static float length(sf::Vector2f v) {
+        return sqrtf(powf(v.x, 2) + powf(v.y, 2));
     };
 }
 
