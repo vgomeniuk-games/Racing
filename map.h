@@ -10,8 +10,11 @@ public:
     sf::Vector2f calculateOffset(sf::Vector2f pivot);
     void update();
 private:
-    struct { sf::Sprite sp; sf::Texture t;  } View;
-    sf::Vector2f Offset;
+    struct {
+        sf::Sprite sp;
+        sf::Texture t;
+        sf::Vector2f Offset;
+    } View;
 };
 
 
