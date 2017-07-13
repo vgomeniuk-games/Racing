@@ -10,10 +10,6 @@
 class AIController {
 public:
     AIController(int competitors);
-    void update(sf::Vector2f Offset);
-    void draw(sf::RenderWindow& window);
-
-private:
     // Setup competitors
     std::vector<sf::Color> colors = {
             sf::Color::Red, sf::Color::Magenta, sf::Color::Cyan, sf::Color::Green,
