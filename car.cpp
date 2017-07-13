@@ -11,11 +11,11 @@ Car::Car(float x, float y, sf::Color color) {
     Position.Absolute.y = y;
 
     // Load & setup sprite
-    View.t.loadFromFile(Car::Info.asset);
-    View.sp.setTexture(View.t);
-    View.sp.setOrigin(Car::Info.size, Car::Info.size);
-    View.sp.setColor(color);
-    View.sp.setPosition(Position.Absolute.x, Position.Absolute.y);
+    Sprites.t.loadFromFile(Car::Info.asset);
+    Sprites.sp.setTexture(Sprites.t);
+    Sprites.sp.setOrigin(Car::Info.size, Car::Info.size);
+    Sprites.sp.setColor(color);
+    Sprites.sp.setPosition(Position.Absolute.x, Position.Absolute.y);
 
     // Register instance
     Car::cars.push_back(this);
@@ -51,7 +51,9 @@ void Car::move(Direction direction) {
 }
 
 void Car::draw(sf::RenderWindow &window) {
-    window.draw(View.sp);
+    for (auto car : cars) {
+        window.draw(car->Sprites.sp);
+    }
 }
 
 sf::Vector2f Car::getPosition(PositionType type) {
@@ -59,42 +61,49 @@ sf::Vector2f Car::getPosition(PositionType type) {
 }
 
 void Car::update(sf::Vector2f Offset) {
+    for (int i = 0; i < cars.size(); ++i) {
+        // Update position on screen and movement
+        cars[i]->updateView(Offset);
+        cars[i]->updateMovement();
+
+        // Check if collides with other cars
+        for(int j = i; j < cars.size(); ++j) {
+            cars[i]->checkCollision(cars[j]);
+        }
+    }
+}
+
+void Car::updateView(sf::Vector2f Offset) {
     Position.Absolute.x += sin(Rotation.angle) * Speed.current;
     Position.Absolute.y -= cos(Rotation.angle) * Speed.current;
     Position.Relative.x = Position.Absolute.x - Offset.x;
     Position.Relative.y = Position.Absolute.y - Offset.y;
 
     // Update position and rotation
-    View.sp.setPosition(Position.Relative);
-    View.sp.setRotation(Rotation.angle * 180 / static_cast<float>(M_PI));
+    Sprites.sp.setPosition(Position.Relative);
+    Sprites.sp.setRotation(Rotation.angle * 180 / static_cast<float>(M_PI));
+}
 
+void Car::updateMovement() {
     // Decelerate over time if no movement registered
     if (!Transform.moving) {
         if (Speed.current > Transform.acc) { Speed.current -= Transform.acc; }
         else if (Speed.current < -Transform.acc) { Speed.current += Transform.acc; }
         else { Speed.current = 0; }
     }
-
     // Reset movement observer at the end of a frame update
     Transform.moving = false;
-
 }
 
-void Car::checkCollision() {
-    for (int a = 0; a < cars.size(); ++a) {
-        for (int b = a + 1; b < cars.size(); ++b) {
+void Car::checkCollision(Car* other) {
+    // Get distance to other car
+    sf::Vector2f distance = this->Position.Absolute - other->Position.Absolute;
 
-            sf::Vector2f posA = cars[a]->Position.Absolute;
-            sf::Vector2f posB = cars[b]->Position.Absolute;
-            sf::Vector2f dpos = posA - posB;
-
-            // If 2 cars collide
-            // Note: Compare pow(vector.length) and don't calculate sqrt()
-            if(pow(dpos.x, 2) + pow(dpos.y, 2) < 2 * pow(Car::Info.size, 2)) {
-                cars[a]->Position.Absolute += dpos / 5.0f;
-                cars[b]->Position.Absolute -= dpos / 5.0f;
-            }
-
-        }
+    // Check if collide
+    // Note: Compare pow(vector.length) and don't calculate sqrt()
+    if(pow(distance.x, 2) + pow(distance.y, 2) < 2 * pow(Car::Info.size, 2)) {
+        // Slide a bit to different direction
+        this->Position.Absolute += distance / 5.0f;
+        other->Position.Absolute -= distance / 5.0f;
     }
 }

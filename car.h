@@ -13,20 +13,24 @@ class Car {
 public:
     Car(float x, float y, sf::Color color);
     void move(Direction direction);
-    void draw(sf::RenderWindow& window);
     sf::Vector2f getPosition(PositionType type=Absolute);
-    void update(sf::Vector2f Offset);
-    static void checkCollision();
+
+    static void draw(sf::RenderWindow& window);
+    static void update(sf::Vector2f Offset);
+
+protected:
+    void updateView(sf::Vector2f Offset);
+    void updateMovement();
+    void checkCollision(Car* other);
 
 private:
     // Cars holder
     static std::vector<Car*> cars;
     static struct InfoType {
         float size{ 22.0f };
-        float collisionDistance{sqrt(2) * size};
         std::string asset{"assets/car.png"};
     } Info;
-    struct { sf::Sprite sp; sf::Texture t; } View;
+    struct { sf::Sprite sp; sf::Texture t; } Sprites;
     struct {
         sf::Vector2f Absolute;
         sf::Vector2f Relative;

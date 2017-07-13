@@ -6,10 +6,10 @@
 #include <SFML/Graphics/Color.hpp>
 #include "car.h"
 
-// simple racing AI
-class AI {
+// simple racing AIController
+class AIController {
 public:
-    AI(int competitors);
+    AIController(int competitors);
     void update(sf::Vector2f Offset);
     void draw(sf::RenderWindow& window);
 
